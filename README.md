@@ -31,14 +31,6 @@ This repository contains data, code, and analysis pertaining to the urbanization
 
 - **Future Prediction**: Use Cellular Automata modeling with spatial variables to predict LULC changes up to 2033.
 
-### Code Files
-- `lulc_mapping_script.js`: GEE script for LULC mapping using Landsat imagery.
-  
-- `temperature_analysis.ipynb`: Jupyter notebook for LST computation and UHI/UTFVI analysis.
-  
-- `nighttime_lights_analysis.py`: Python script for NTL processing and visualization.
-
-- `future_prediction_qgis_project.qgz`: QGIS project file for Cellular Automata-based future LULC prediction.
 
 ### Results
 - **LULC Maps**: Generated maps depicting urbanization patterns from 1993 to 2023.
