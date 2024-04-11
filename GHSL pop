@@ -1,0 +1,94 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AOI = ee.FeatureCollection("projects/projbigdata/assets/BBSRBDA"),
+    ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_POP");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Import the AOI
+var AOI = ee.FeatureCollection('projects/projbigdata/assets/BBSRBDA');
+// var startDate = '1993-01-01'
+// var endDate = '1993-12-31'
+
+var baseChange =
+    [{featureType: 'all', stylers: [{saturation: -100}, {lightness: 45}]}];
+Map.setOptions('baseChange', {'baseChange': baseChange});
+var image1990 = ee.Image('JRC/GHSL/P2023A/GHS_POP/1990');
+var image2000 = ee.Image('JRC/GHSL/P2023A/GHS_POP/2000');
+var image2010 = ee.Image('JRC/GHSL/P2023A/GHS_POP/2010');
+var image2020 = ee.Image('JRC/GHSL/P2023A/GHS_POP/2020');
+var populationCountVis = {
+  min: 0.0,
+  max: 100.0,
+  palette:
+      ['000004', '320A5A', '781B6C', 'BB3654', 'EC6824', 'FBB41A', 'FCFFA4']
+};
+
+image1990 = image1990.updateMask(image1990.gt(0).clip(AOI));
+image2000 = image2000.updateMask(image2000.gt(0).clip(AOI));
+image2010 = image2010.updateMask(image2010.gt(0).clip(AOI));
+image2020 = image2020.updateMask(image2020.gt(0).clip(AOI));
+
+
+// Map.addLayer(image1990, populationCountVis, 'Population count, 1990');
+// Map.addLayer(image2000, populationCountVis, 'Population count, 2000');
+// Map.addLayer(image2010, populationCountVis, 'Population count, 2010');
+// Map.addLayer(image2020, populationCountVis, 'Population count, 2020');
+// Map.centerObject(AOI, 10);
+
+
+// Clip images to AOI
+var image1990_clipped = image1990.clip(AOI);
+var image2000_clipped = image2000.clip(AOI);
+var image2010_clipped = image2010.clip(AOI);
+var image2020_clipped = image2020.clip(AOI);
+
+
+
+Map.addLayer(image1990_clipped, populationCountVis, 'Population count, 1990');
+Map.centerObject(AOI, 10);
+
+Map.addLayer(image2000_clipped, populationCountVis, 'Population count, 2000');
+Map.centerObject(AOI, 10);
+
+Map.addLayer(image2010_clipped, populationCountVis, 'Population count, 2010');
+Map.centerObject(AOI, 10);
+
+Map.addLayer(image2020_clipped, populationCountVis, 'Population count, 2020');
+Map.centerObject(AOI, 10);
+
+
+
+// Export images to Google Drive
+Export.image.toDrive({
+  image: image1990_clipped,
+  description: 'Population_count_1990',
+  folder: 'GEE_exports',
+  region: AOI,
+  scale: 100,
+  crs: 'EPSG:4326'
+});
+
+Export.image.toDrive({
+  image: image2000_clipped,
+  description: 'Population_count_2000',
+  folder: 'GEE_exports',
+  region: AOI,
+  scale: 100,
+  crs: 'EPSG:4326'
+});
+
+Export.image.toDrive({
+  image: image2010_clipped,
+  description: 'Population_count_2010',
+  folder: 'GEE_exports',
+  region: AOI,
+  scale: 100,
+  crs: 'EPSG:4326'
+});
+
+Export.image.toDrive({
+  image: image2020_clipped,
+  description: 'Population_count_2020',
+  folder: 'GEE_exports',
+  region: AOI,
+  scale: 100,
+  crs: 'EPSG:4326'
+});

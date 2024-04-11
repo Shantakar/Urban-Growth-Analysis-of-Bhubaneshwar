@@ -1,0 +1,58 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AOI = ee.FeatureCollection("projects/projbigdata/assets/BBSRBDA");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var AOI = ee.FeatureCollection('projects/projbigdata/assets/BBSRBDA');
+Map.centerObject(AOI, 10);
+
+var dataset = ee.ImageCollection("NOAA/DMSP-OLS/NIGHTTIME_LIGHTS")
+              .select('stable_lights')
+              .map(function(img){
+                return img.set('year' , ee.Image(img).date().get('year'));
+              });
+
+// Define years
+var years = [1993, 2003];
+
+// Function to clip image to AOI
+var clipToAOI = function(image) {
+  return image.clip(AOI);
+};
+
+// Filter images for each year and clip to AOI
+var images1993 = dataset.filter(ee.Filter.eq('year', years[0])).map(clipToAOI);
+var images2003 = dataset.filter(ee.Filter.eq('year', years[1])).map(clipToAOI);
+
+// Create ImageCollections
+var collection1993 = ee.ImageCollection(images1993);
+var collection2003 = ee.ImageCollection(images2003);
+
+// Define visualization parameters
+var style = {
+  bands: ['stable_lights'],
+  max: 70,
+  palette: ['black', 'grey', 'yellow', 'gold', 'red']
+};
+
+// Add layers to the map
+Map.addLayer(collection1993, style, 'NOAA - ' + years[0], false);
+Map.addLayer(collection2003, style, 'NOAA - ' + years[1], false);
+
+// Export images for 1993
+Export.image.toDrive({
+  image: collection1993.mean().toFloat(),
+  description: 'nighttime_lights_1993',
+  folder: 'GEE_exports',
+  region: AOI.geometry(),
+  scale: 1000,
+  maxPixels: 1e9
+});
+
+// Export images for 2003
+Export.image.toDrive({
+  image: collection2003.mean().toFloat(),
+  description: 'nighttime_lights_2003',
+  folder: 'GEE_exports',
+  region: AOI.geometry(),
+  scale: 1000,
+  maxPixels: 1e9
+});

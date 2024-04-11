@@ -1,0 +1,177 @@
+//Importing required assets
+var roi = ee.FeatureCollection("users/shantakarm43/BBSRBDA"),
+    LULC_1993 = ee.Image("users/shantakarm43/classified_image_1993"),
+    LULC_2003 = ee.Image("users/shantakarm43/classified_image_2003"),
+    LULC_2013 = ee.Image("users/shantakarm43/classified_image_2013"),
+    LULC_2023 = ee.Image("users/shantakarm43/classified_image_2023");
+
+Map.centerObject(roi);
+
+var previousyear = LULC_1993.remap([0, 1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]);
+var nextyear = LULC_2023.remap([0, 1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]);
+
+
+var merged = previousyear.multiply(100).add(nextyear).rename('transitions');
+
+// Use a frequencyHistogram to get a pixel count per class
+var transitionMatrix = merged.reduceRegion({
+  reducer: ee.Reducer.frequencyHistogram(), 
+  geometry: roi,
+  maxPixels: 1e13,
+  scale:30,
+});
+// This prints number of pixels for each class transition
+print(transitionMatrix.get('transitions'),'Transition matrix');
+
+// If we want to calculate the area of each class transition
+// we can use a grouped reducer
+
+// Divide by 1e6 to get the area in sq.km.
+var areaImage = ee.Image.pixelArea().divide(1e6).addBands(merged);
+print(areaImage)
+// Calculate Area by each Transition Class
+// using a Grouped Reducer
+var areas = areaImage.reduceRegion({
+      reducer: ee.Reducer.sum().group({
+      groupField: 1,
+      groupName: 'transitions',
+    }),
+    geometry: roi,
+    scale: 30,
+    maxPixels: 1e13
+    }); 
+
+print(areas,'areas transition 1993-2023')
+
+// Post-process the result to generate a clean output
+var classAreas = ee.List(areas.get('groups'));
+var classAreaLists = classAreas.map(function(item) {
+      var areaDict = ee.Dictionary(item);
+      var classNumber = ee.Number(areaDict.get('transitions')).format();
+      var area = ee.Number(areaDict.get('sum'));
+      return ee.List([classNumber, area]);
+    });
+var classTransitionsAreaDict = ee.Dictionary(classAreaLists.flatten());
+print(classTransitionsAreaDict,'classTransitionsArea1993-2023');
+
+
+// Define transition codes and corresponding class pairs
+var transitionCodes = {
+  'Builtup to Builtup': 101,
+  'Builtup to ForestVeg': 102,
+  'Builtup to Waterbody': 103,
+  'Builtup to Cropland': 104,
+  'Builtup to Riverbed': 105,
+  'Builtup to Barrenland': 106,
+  'ForestVeg to Builtup': 201,
+  'ForestVeg to ForestVeg': 202,
+  'ForestVeg to Waterbody': 203,
+  'ForestVeg to Cropland': 204,
+  'ForestVeg to Riverbed': 205,
+  'ForestVeg to Barrenland': 206,
+  'Waterbody to Builtup': 301,
+  'Waterbody to ForestVeg': 302,
+  'Waterbody to Waterbody': 303,
+  'Waterbody to Cropland': 304,
+  'Waterbody to Riverbed': 305,
+  'Waterbody to Barrenland': 306,
+  'Cropland to Builtup': 401,
+  'Cropland to ForestVeg': 402,
+  'Cropland to Waterbody': 403,
+  'Cropland to Cropland': 404,
+  'Cropland to Riverbed': 405,
+  'Cropland to Barrenland': 406,
+  'Riverbed to Builtup': 501,
+  'Riverbed to ForestVeg': 502,
+  'Riverbed to Waterbody': 503,
+  'Riverbed to Cropland': 504,
+  'Riverbed to Riverbed': 505,
+  'Riverbed to Barrenland': 506,
+  'Barrenland to Builtup': 601,
+  'Barrenland to ForestVeg': 602,
+  'Barrenland to Waterbody': 603,
+  'Barrenland to Cropland': 604,
+  'Barrenland to Riverbed': 605,
+  'Barrenland to Barrenland': 606
+};
+
+// Define color palette for transitions
+var transitionColors = {
+  101: '808080', // Grey for no change (Builtup to Builtup)
+  102: 'ff0000', // Red for Builtup to ForestVeg
+  103: '0000ff', // Blue for Builtup to Waterbody
+  104: '90ee90', // Light Green for Builtup to Cropland
+  105: '00ffff', // Cyan for Builtup to Riverbed
+  106: 'ffb6c1', // Light Pink for Builtup to Barrenland
+  201: 'ff0000', // Red for ForestVeg to Builtup
+  202: '808080', // Grey for no change (ForestVeg to ForestVeg)
+  203: '0000ff', // Blue for ForestVeg to Waterbody
+  204: '90ee90', // Light Green for ForestVeg to Cropland
+  205: '00ffff', // Cyan for ForestVeg to Riverbed
+  206: 'ffb6c1', // Light Pink for ForestVeg to Barrenland
+  301: 'ff0000', // Red for Waterbody to Builtup
+  302: '008000', // Green for Waterbody to ForestVeg
+  303: '808080', // Grey for no change (Waterbody to Waterbody)
+  304: '90ee90', // Light Green for Waterbody to Cropland
+  305: '00ffff', // Cyan for Waterbody to Riverbed
+  306: 'ffb6c1', // Light Pink for Waterbody to Barrenland
+  401: 'ff0000', // Red for Cropland to Builtup
+  402: '008000', // Green for Cropland to ForestVeg
+  403: '0000ff', // Blue for Cropland to Waterbody
+  404: '808080', // Grey for no change (Cropland to Cropland)
+  405: '00ffff', // Cyan for Cropland to Riverbed
+  406: 'ffb6c1', // Light Pink for Cropland to Barrenland
+  501: 'ff0000', // Red for Riverbed to Builtup
+  502: '008000', // Green for Riverbed to ForestVeg
+  503: '0000ff', // Blue for Riverbed to Waterbody
+  504: '90ee90', // Light Green for Riverbed to Cropland
+  505: '808080', // Grey for no change (Riverbed to Riverbed)
+  506: 'ffb6c1', // Light Pink for Riverbed to Barrenland
+  601: 'ff0000', // Red for Barrenland to Builtup
+  602: '008000', // Green for Barrenland to ForestVeg
+  603: '0000ff', // Blue for Barrenland to Waterbody
+  604: '90ee90', // Light Green for Barrenland to Cropland
+  605: '00ffff', // Cyan for Barrenland to Riverbed
+  606: '808080'  // Grey for no change (Barrenland to Barrenland)
+};
+
+// Create a transition image based on transition codes
+
+// Create a transition image based on transition codes
+var transitionImage = ee.Image.constant(0); // Initialize with zeros
+
+Object.keys(transitionCodes).forEach(function(transitionName) {
+  var code = transitionCodes[transitionName];
+  transitionImage = transitionImage.where(
+    merged.eq(code), ee.Image.constant(code)
+  );
+});
+
+// Display the transition image with color-coded transitions
+// Clip transitionImage with the defined AOI (roi)
+var clippedTransitionImage = transitionImage.clip(roi);
+
+// Define visualization parameters for the clipped transitionImage
+var visParams = {
+  min: 101,
+  max: 606,
+  palette: Object.keys(transitionCodes).map(function(transitionName) {
+    var code = transitionCodes[transitionName];
+    return transitionColors[code];
+  })
+};
+
+// Add the clipped transitionImage to the map
+Map.addLayer(clippedTransitionImage, visParams, 'Land Cover Transitions (1993-2023)');
+
+// Center the map on the clipped AOI
+Map.centerObject(roi, 10); // Adjust zoom level (e.g., 10) as needed
+
+Export.image.toDrive({
+  image: clippedTransitionImage,
+  description: 'clippedTransitionImage',
+  scale: 30,
+  region: roi,
+  maxPixels: 1e13,
+});
+

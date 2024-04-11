@@ -1,0 +1,74 @@
+var roi = ee.FeatureCollection("users/shantakarm43/BBSRBDA"),
+    LULC_1993 = ee.Image("users/shantakarm43/classified_image_1993"),
+    LULC_2003 = ee.Image("users/shantakarm43/classified_image_2003"),
+    LULC_2013 = ee.Image("users/shantakarm43/classified_image_2013"),
+    LULC_2023 = ee.Image("users/shantakarm43/classified_image_2023");
+
+Map.centerObject(roi);
+
+var previousyear = LULC_1993.remap([0, 1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]);
+var nextyear = LULC_2023.remap([0, 1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]);
+
+// Show all builtup areas
+var builtup1993 = LULC_1993.clip(roi).eq(0);
+var builtup2003 = LULC_2003.clip(roi).eq(0);
+var builtup2013 = LULC_2013.clip(roi).eq(0);
+var builtup2023 = LULC_2023.clip(roi).eq(0);
+
+// Display the builtup pixels on the map
+Map.addLayer(builtup1993, {min: 0, max: 1, palette: ['D3D3D3', 'red']}, 'Builtup_1993');
+Map.addLayer(builtup2003, {min: 0, max: 1, palette: ['D3D3D3', 'red']}, 'Builtup_2003');
+Map.addLayer(builtup2013, {min: 0, max: 1, palette: ['D3D3D3', 'red']}, 'Builtup_2013');
+Map.addLayer(builtup2023, {min: 0, max: 1, palette: ['D3D3D3', 'red']}, 'Builtup_2023');
+
+// Define class names and colors for legend
+var classColors = ['#D3D3D3', 'red']; // Colors corresponding to each class
+var classNames = ['Not Built-up', 'Built-up']; // Class names corresponding to each class
+
+// Create a legend panel to display class names and colors on the map
+var legend_panel = ui.Panel({
+    style: {
+        position: 'bottom-left',
+        padding: '6px'
+    }
+});
+
+// Add legend title to the panel
+var legend_title = ui.Label({
+    value: "Land Use / Land Cover",
+    style: {
+        fontSize: '14px',
+        fontWeight: 'bold',
+        margin: '0px'
+    }
+});
+legend_panel.add(legend_title);
+
+// Function to create legend items
+var list_legend = function(color, description) {
+    var color_box = ui.Label({
+        style: {
+            backgroundColor: color,
+            padding: '10px',
+            margin: '4px'
+        }
+    });
+    var class_label = ui.Label({
+        value: description,
+        style: {
+            margin: '4px'
+        }
+    });
+    return ui.Panel({
+        widgets: [color_box, class_label],
+        layout: ui.Panel.Layout.Flow('horizontal')
+    });
+};
+
+// Add legend items for each class to the legend panel
+for (var i = 0; i < classColors.length; i++) {
+    legend_panel.add(list_legend(classColors[i], classNames[i]));
+}
+
+// Add legend panel to the Map
+Map.add(legend_panel);

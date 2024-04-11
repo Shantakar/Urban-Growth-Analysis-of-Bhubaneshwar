@@ -1,0 +1,1004 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var LST_1993 = ee.Image("users/ankitaghoke/LST1993"),
+    LST_2003 = ee.Image("users/ankitaghoke/LST2003"),
+    LST_2013 = ee.Image("users/ankitaghoke/LST2013"),
+    LST_2023 = ee.Image("users/ankitaghoke/LST2023"),
+    NDVI_1993 = ee.Image("users/ankitaghoke/NDVI1993"),
+    NDVI_2003 = ee.Image("users/ankitaghoke/NDVI2003"),
+    NDVI_2013 = ee.Image("users/ankitaghoke/NDVI2013"),
+    NDVI_2023 = ee.Image("users/ankitaghoke/NDVI2023"),
+    NTL_1993 = ee.Image("users/ankitaghoke/NTL1993"),
+    NTL_2003 = ee.Image("users/ankitaghoke/NTL2003"),
+    NTL_2013 = ee.Image("users/ankitaghoke/NTL2013"),
+    NTL_2023 = ee.Image("users/ankitaghoke/NTL2023"),
+    Pop_1990 = ee.Image("users/ankitaghoke/POP1990"),
+    Pop_2000 = ee.Image("users/ankitaghoke/POP2000"),
+    Pop_2010 = ee.Image("users/ankitaghoke/POP2010"),
+    Pop_2020 = ee.Image("users/ankitaghoke/POP2020"),
+    uhi_1993 = ee.Image("users/ankitaghoke/UHI1993"),
+    uhi_2003 = ee.Image("users/ankitaghoke/UHI2003"),
+    uhi_2013 = ee.Image("users/ankitaghoke/UHI2013"),
+    uhi_2023 = ee.Image("users/ankitaghoke/UHI2023"),
+    utfvi_1993 = ee.Image("users/ankitaghoke/UTFVI1993"),
+    utfvi_2003 = ee.Image("users/ankitaghoke/UTFVI2003"),
+    utfvi_2013 = ee.Image("users/ankitaghoke/UTFVI2013"),
+    utfvi_2023 = ee.Image("users/ankitaghoke/UTFVI2023"),
+    lulc_2003 = ee.Image("users/ankitaghoke/Classified2003"),
+    lulc_2013 = ee.Image("users/ankitaghoke/Classified2013"),
+    lulc_2023 = ee.Image("users/ankitaghoke/Classified2023"),
+    Builtup_1993 = ee.Image("users/ankitaghoke/Builtup_1993"),
+    Builtup_2003 = ee.Image("users/ankitaghoke/Builtup_2003"),
+    Builtup_2013 = ee.Image("users/ankitaghoke/Builtup_2013"),
+    Builtup_2023 = ee.Image("users/ankitaghoke/Builtup_2023"),
+    AOI = ee.FeatureCollection("projects/projbigdata/assets/BBSRBDA"),
+    lulc_1993 = ee.Image("users/ankitaghoke/classified_image_1993_2");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var lulc_1993 = ee.Image('users/ankitaghoke/classified_image_1993_2');
+var lulc_2003 = ee.Image('users/ankitaghoke/Classified2003');
+var lulc_2013 = ee.Image('users/ankitaghoke/Classified2013');
+var lulc_2023 = ee.Image('users/ankitaghoke/Classified2023');
+
+var uhi_1993 = ee.Image('users/ankitaghoke/UHI1993');
+var uhi_2003 = ee.Image('users/ankitaghoke/UHI2003');
+var uhi_2013 = ee.Image('users/ankitaghoke/UHI2013');
+var uhi_2023 = ee.Image('users/ankitaghoke/UHI2023');
+
+var utfvi_1993 = ee.Image('users/ankitaghoke/POP1993');
+var utfvi_2003 = ee.Image('users/ankitaghoke/UTFVI2003');
+var utfvi_2013 = ee.Image('users/ankitaghoke/UTFVI2013');
+var utfvi_2023 = ee.Image('users/ankitaghoke/UTFVI2023');
+
+var Pop_1990 = ee.Image('users/ankitaghoke/POP1990');
+var Pop_2000 = ee.Image('users/ankitaghoke/POP2000');
+var Pop_2010 = ee.Image('users/ankitaghoke/POP2010');
+var Pop_2020 = ee.Image('users/ankitaghoke/POP2020');
+
+var LST_1993 = ee.Image('users/ankitaghoke/LST1993');
+var LST_2003 = ee.Image('users/ankitaghoke/LST2003');
+var LST_2013 = ee.Image('users/ankitaghoke/LST2013');
+var LST_2023 = ee.Image('users/ankitaghoke/LST2023');
+
+var NDVI_1993 = ee.Image('users/ankitaghoke/NDVI1993');
+var NDVI_2003 = ee.Image('users/ankitaghoke/NDVI2003');
+var NDVI_2013 = ee.Image('users/ankitaghoke/NDVI2013');
+var NDVI_2023 = ee.Image('users/ankitaghoke/NDVI2023');
+
+var NTL_1993 = ee.Image('users/ankitaghoke/NTL1993');
+var NTL_2003 = ee.Image('users/ankitaghoke/NTL2003');
+var NTL_2013 = ee.Image('users/ankitaghoke/NTL2013');
+var NTL_2023 = ee.Image('users/ankitaghoke/NTL2023');
+
+var Builtup_1993 = ee.Image('users/ankitaghoke/Builtup_1993')
+var Builtup_2003 = ee.Image('users/ankitaghoke/Builtup_2003')
+var Builtup_2013 = ee.Image('users/ankitaghoke/Builtup_2013')
+var Builtup_2023 = ee.Image('users/ankitaghoke/Builtup_2023')
+
+// Function to create the intro panel with labels.
+function panelcreate() {
+    // Create an intro panel with labels.
+    var intro = ui.Panel([
+        ui.Label({
+            value: 'Decadal Urban growth analysis of Bhubaneswar',
+            style: {
+                fontSize: '1.5vw',
+                fontWeight: 'bold'
+            },
+        }),
+        ui.Label({
+            value: 'This dashboard for Bhubaneswar provides a comprehensive visualization of decadal ' +
+           'Urban growth and Land Use and Land Cover (LULC) changes across the years 1993, 2003, ' +
+           '2013, and 2023, along with spatial variables like NDVI (Normalized Difference Vegetation Index), ' +
+           'LST (Land Surface Temperature), UHI (Urban Heat Island), UTFVI (Urban Tree Canopy Fractional Vegetation Index), ' +
+           'and GHSL (Global Human Settlement Layer) population data. ' +
+           'The data layers can be switched from the legend panel. ' +
+           'The Urban growth trend can also be visualized through the built-up data layers.',
+            style: {
+                fontSize: '1.0vw',
+                fontWeight: 'bold'
+            },
+        }),
+    ]);
+
+    // Add intro panel to the main panel.
+    panel.add(intro);
+}
+
+// Create main panel.
+var panel = ui.Panel();
+
+// Set the width and font style for the main panel.
+panel.style().set({
+    width: '20%',
+    fontSize: '1vw',
+    fontWeight: 'bold'
+});
+
+// Add the main panel to the UI root.
+ui.root.insert(1, panel);
+var main_map = ui.Map({style: {width:'70%'}});
+main_map.setCenter(85.755978 , 20.257780, 10);
+main_map.addLayer(AOI);
+ui.root.insert(1,main_map);
+
+// Call the panelcreate function to create the intro panel.
+panelcreate();
+
+// Visualization paramaters
+
+// Visualization parameters for LULC images
+var lulcVisParam = {
+  min: 0,
+  max: 5,
+  palette: ['Red','Green','Blue','9CC860','Cyan','Pink']
+};
+
+// Visualization parameters for built-up areas
+var builtupVisParam = {
+  min: 0,
+  max: 1,
+  palette: ['red', 'white']
+};
+
+// Visualization parameters for UHI images
+var uhiVisParam = {
+  bands: ['UHI'],
+  min: 0,
+  max: 50,
+  palette: ['313695', '3a67ac', '74add1', 'fed976','feb24c', 'fd8d3c','e31a1c', 'b10026']
+};
+
+// Visualization parameters for UTFVI images
+var utfviVisParam = {
+  bands: ['UTFVI'],
+  min: 0,
+  max: 1,
+  palette: ['313695','74add1','fed976','feb24c','fc4e2a', 'e31a1c','b83309']
+};
+
+// Visualization parameters for population images
+var popVisParam = {
+  min: 0,
+  max: 500,
+  palette:  ['000004', '781B6C', 'EC6824', 'FCFFA4']
+};
+
+// Visualization parameters for LST images
+var lstVisParam = {
+  min: 280,
+  max: 310,
+  palette: ['040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',
+'0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',
+'3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',
+'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',
+'ff0000', 'de0101', 'c21301', 'a71001', '911003']
+};
+
+// Visualization parameters for NDVI images
+var ndviVisParam = {
+  min: 0,
+  max: 1,
+  palette: ['white','green']
+};
+
+// Visualization parameters for NTL images
+var ntlVisParam = {
+  min: 0,
+  max: 63,
+  palette: ['black', 'grey', 'yellow', 'gold', 'red']
+};
+
+
+/* ARRAYS OF AREAS OF EACH CLASS FOR EVERY YEAR */ 
+
+//LULC
+
+var areas_1993 = [27.89, 183.70, 6.50, 169.46, 5.56, 26.11];
+var areas_2003 = [34.08, 312.05, 6.78, 59.51, 5.62, 1.20];
+var areas_2013 = [76.85, 169.62, 5.03, 160.13, 5.58, 2.03];
+var areas_2023 = [82.01, 222.57, 5.09, 103.19, 3.70, 2.68];
+
+
+// Define class colors and names
+var classColors = ['#FF0000', '#008000', 'red', '#9CC860', '#00FFFF', '#FFC0CB']; // Hex color codes
+var class_names = ['Builtup', 'ForestVeg', 'Waterbody', 'Cropland', 'Riverbed', 'Barrenland'];
+
+// Create legend panel
+// var class_names = ['Builtup', 'ForestVeg', 'Waterbody', 'Cropland','Riverbed', 'Barrenland'];
+// var color = ['Red','Green','Blue','9CC860','Cyan','Pink'];
+var classified_class=['Builtup', 'ForestVeg', 'Waterbody', 'Cropland','Riverbed', 'Barrenland'];
+// var col2=["#2E7F18","#675E24","#8D472B","#C82538"]
+
+// Builtup
+
+var builtup_names = ['Non Built-up', 'Built-up'];
+var builtup_1993 = [27.89, 391.33];
+var builtup_2003 = [34.08, 385.14 ];
+var builtup_2013 = [76.85, 342.37];
+var builtup_2023 = [82.01, 337.21 ];
+
+
+//Legend for LULC
+
+var classColors = ['Red','Green','Blue','9CC860','Cyan','Pink']; // Hexadecimal color codes for classes (Red, Green, Blue, Light Green, Cyan, Pink)
+var classNames = ['Built-up', 'Forest/Vegetation', 'Waterbody', 'Cropland', 'Riverbed', 'Barrenland']; // Class names based on your training data
+
+
+var lulc_legend_panel = ui.Panel({
+  style: {
+    position: 'bottom-left',
+    padding: '6px'
+  }
+});
+
+// Add legend title to the panel
+var lulc_legend_title = ui.Label({
+  value: "Land Use / Land Cover",
+  style: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    margin: '0px'
+  }
+});
+lulc_legend_panel.add(lulc_legend_title);
+
+// Function to create legend items
+var list_legend = function(color, description) {
+  var color_box = ui.Label({
+    style: {
+      backgroundColor: color, // Use the provided color directly
+      padding: '10px',
+      margin: '4px'
+    }
+  });
+  var class_label = ui.Label({
+    value: description,
+    style: {
+      margin: '4px'
+    }
+  });
+  return ui.Panel({
+    widgets: [color_box, class_label],
+    layout: ui.Panel.Layout.Flow('horizontal')
+  });
+};
+
+// Add legend items for each class to the legend panel
+for (var i = 0; i < classColors.length; i++) {
+  lulc_legend_panel.add(list_legend(classColors[i], classNames[i]));
+}
+
+// Map.add(lulc_legend_panel);
+
+//Legend for Builtup
+
+
+// Function to create legend items for Builtup
+var createBuiltupLegend = function(colors, descriptions) {
+  var builtup_legend_panel = ui.Panel({
+    style: {
+      position: 'bottom-left',
+      padding: '6px'
+    }
+  });
+
+  // Add legend title for Builtup
+  var builtup_legend_title = ui.Label({
+    value: "Builtup",
+    style: {
+      fontSize: '14px',
+      fontWeight: 'bold',
+      margin: '0px'
+    }
+  });
+  builtup_legend_panel.add(builtup_legend_title);
+  
+
+  // Function to create legend items
+  var list_legend = function(color, description) {
+    var color_box = ui.Label({
+      style: {
+        backgroundColor: color,
+        padding: '10px',
+        margin: '4px'
+      }
+    });
+    var class_label = ui.Label({
+      value: description,
+      style: {
+        margin: '4px'
+      }
+    });
+    return ui.Panel({
+      widgets: [color_box, class_label],
+      layout: ui.Panel.Layout.Flow('horizontal')
+    });
+  };
+
+  // Add legend items for each class to the Builtup legend panel
+  for (var i = 0; i < colors.length; i++) {
+    builtup_legend_panel.add(list_legend(colors[i], descriptions[i]));
+  }
+
+  return builtup_legend_panel;
+};
+
+// Define colors and descriptions for the Builtup legend
+var builtupColors = ['white', 'red']; // Colors for Non Built-up and Built-up
+var builtupDescriptions = ['Non Built-up', 'Built-up']; // Descriptions for Non Built-up and Built-up
+
+// Create the Builtup legend panel
+var builtupLegendPanel = createBuiltupLegend(builtupColors, builtupDescriptions);
+
+// // Add Builtup legend panel to the Map
+// Map.add(builtupLegendPanel);
+
+
+//legend for GHSL Population
+// Function to create legend items for GHSL Population
+
+
+var createGHSLPopulationLegend = function(colors, descriptions) {
+  var ghsl_legend_panel = ui.Panel({
+    style: {
+      position: 'bottom-left',
+      padding: '6px'
+    }
+  });
+
+
+  // Add legend title for GHSL Population
+  var ghsl_legend_title = ui.Label({
+    value: "GHSL Population",
+    style: {
+      fontSize: '14px',
+      fontWeight: 'bold',
+      margin: '0px'
+    }
+  });
+  ghsl_legend_panel.add(ghsl_legend_title);
+
+  // Function to create legend items
+  var list_legend = function(color, description) {
+    var color_box = ui.Label({
+      style: {
+        backgroundColor: color,
+        padding: '10px',
+        margin: '4px'
+      }
+    });
+    var class_label = ui.Label({
+      value: description,
+      style: {
+        margin: '4px'
+      }
+    });
+    return ui.Panel({
+      widgets: [color_box, class_label],
+      layout: ui.Panel.Layout.Flow('horizontal')
+    });
+  };
+
+  // Add legend items for each class to the GHSL Population legend panel
+  for (var i = 0; i < colors.length; i++) {
+    ghsl_legend_panel.add(list_legend(colors[i], descriptions[i]));
+  }
+
+  return ghsl_legend_panel;
+};
+
+// for(var a = 0; a <4; a++){ // Increase the number of iterations depending on the number of classes in the classified image
+//   ghsl_legend_panel.add(list_legend(col2[a], class1[a])); // add each color and the class name to the legend 
+// }
+
+// Define colors and descriptions for the GHSL Population legend
+var ghslColors = ['000004', '781B6C', 'EC6824', 'FCFFA4']; // Colors for Low, Medium, High, Very High
+var ghslDescriptions = ['Low', 'Medium', 'High', 'Very High'];
+// Create the GHSL Population legend panel
+var ghslLegendPanel = createGHSLPopulationLegend(ghslColors, ghslDescriptions);
+
+// // Add GHSL Population legend panel to the Map
+// Map.add(ghslLegendPanel);
+
+
+////labels
+var lulc_label = ui.Label({
+  'color': '#ffffff', 
+  'font-size': '23px',
+  'padding': '17px',
+  'text-align': 'justify',
+  'backgroundColor': '#181823',
+  'font-family': 'Helvetica',
+});
+
+
+var builtup_label = ui.Label({
+  'color': '#ffffff', 
+  'font-size': '23px',
+  'padding': '17px',
+  'text-align': 'justify',
+  'backgroundColor': '#181823',
+  'font-family': 'Helvetica',
+});
+
+
+var NTL_label = ui.Label;('Night lights layers gives an idea about the increase in Nightlights over Bhubaneswar as urbanisation happened in 1993, 2003, 2013, 2023'+
+                            ',Click on the button below to select the map of the particular year.');
+NTL_label({
+  'color': '#ffffff', 
+  'font-size': '23px',
+  'padding': '17px',
+  'text-align': 'justify',
+  'backgroundColor': '#181823',
+  'font-family': 'Helvetica',
+});
+
+var GHSL_pop_label = ui.Label('GHSL Population layer gives an idea about the population per pixel of Bhubaneswar for 1993, 2003, 2013, 2023'+
+                            ',Click on the button below to select the map of the particular year.');
+GHSL_pop_label.style().set({
+  'color': '#ffffff', 
+  'font-size': '23px',
+  'padding': '17px',
+  'text-align': 'justify',
+  'backgroundColor': '#181823',
+  'font-family': 'Helvetica',
+});
+
+var NDVI_label = ui.Label('NDVI changes for 1993, 2003, 2013, and 2023.'+
+                            'Click on the button below to select the map of the particular year.');
+NDVI_label.style().set({
+  'color': '#ffffff', 
+  'font-size': '23px',
+  'padding': '17px',
+  'text-align': 'justify',
+  'backgroundColor': '#181823',
+  'font-family': 'Helvetica',
+});
+
+
+var LST_label = ui.Label('Land surface temperature changes in Bhubaneswar for 1993, 2003, 2013, and 2023.'+
+                            'Click on the button below to select the map of the particular year.');
+LST_label.style().set({
+  'color': '#ffffff', 
+  'font-size': '23px',
+  'padding': '17px',
+  'text-align': 'justify',
+  'backgroundColor': '#181823',
+  'font-family': 'Helvetica',
+});
+
+
+//Dictionaries for option Selection
+
+var lulc = {
+  'LULC 1993': lulc_1993,
+  'LULC 2003': lulc_2003,
+  'LULC 2013': lulc_2013,
+  'LULC 2023': lulc_2023
+};
+
+var Builtup = {
+  'Builtup 1993': Builtup_1993,
+  'Builtup 2003': Builtup_2003,
+  'Builtup 2013': Builtup_2013,
+  'Builtup 2023': Builtup_2023
+};
+var Night_Lights = {
+  'Night Lights 1993': NTL_1993,
+  'Night Lights 2003': NTL_2003,
+  'Night Lights 2013': NTL_2013,
+  'Night Lights 2023': NTL_2023
+};
+
+var NDVI = {
+  'NDVI 1993': NDVI_1993,
+  'NDVI 2003': NDVI_2003,
+  'NDVI 2013': NDVI_2013,
+  'NDVI 2023': NDVI_2023
+};
+var GHSL_pop = {
+  'GHSL Population 1990': Pop_1990,
+  'GHSL Population 2000': Pop_2000,
+  'GHSL Population 2010': Pop_2010,
+  'GHSL Population 2020': Pop_2020
+};
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Charts
+
+var chart_1993 = ui.Chart.array.values(areas_1993, 0, class_names).setChartType('ColumnChart')
+                    .setOptions({
+                    hAxis: {title: 'Area Km2'},
+                    vAxis: {title: 'Classes'},
+                    title: 'Area by class 1993',
+                    legend: { position: "none" },
+                    orientation: 'vertical',
+                    fontName: 'arial',
+                    fontSize: 10,
+                    chartArea: {backgroundColor: 'EBEBEB'}
+                  });
+
+var chart_2003 = ui.Chart.array.values(areas_2003, 0, class_names).setChartType('ColumnChart')
+                    .setOptions({
+                    hAxis: {title: 'Area Km2'},
+                    vAxis: {title: 'Classes'},
+                    title: 'Area by class 2003',
+                    legend: { position: "none" },
+                    orientation: 'vertical',
+                    fontName: 'arial',
+                    fontSize: 10,
+                    chartArea: {backgroundColor: 'EBEBEB'}
+                  });
+                  
+var chart_2013 = ui.Chart.array.values(areas_2013, 0, class_names).setChartType('ColumnChart')
+                    .setOptions({
+                    hAxis: {title: 'Area Km2'},
+                    vAxis: {title: 'Classes'},
+                    title: 'Area by class 2013',
+                    legend: { position: "none" },
+                    orientation: 'vertical',
+                    fontName: 'arial',
+                    fontSize: 10,
+                    chartArea: {backgroundColor: 'EBEBEB'}
+                  });
+                  
+var chart_2023 = ui.Chart.array.values(areas_2023, 0, class_names).setChartType('ColumnChart')
+                    .setOptions({
+                    hAxis: {title: 'Area Km2'},
+                    vAxis: {title: 'Classes'},
+                    title: 'Area by class 2023',
+                    legend: { position: "none" },
+                    orientation: 'vertical',
+                    fontName: 'arial',
+                    fontSize: 10,
+                    chartArea: {backgroundColor: 'EBEBEB'}
+                  });
+                  
+
+var builtup_chart_1993 = ui.Chart.array.values(builtup_1993, 0, builtup_names).setChartType('ColumnChart')
+        .setOptions({
+        hAxis: { title: 'Area (Km²)' },
+        vAxis: { title: 'Builtup Land Cover' },
+        title: 'Built-up Area Distribution 1993',
+        legend: { position: 'none' },
+        orientation: 'horizontal',
+        fontName: 'arial',
+        fontSize: 10,
+        chartArea: { backgroundColor: 'EBEBEB' }
+    });
+
+var builtup_chart_2003 = ui.Chart.array.values(builtup_2003, 0, builtup_names)
+    .setChartType('ColumnChart')
+    .setOptions({
+        hAxis: { title: 'Area (Km²)' },
+        vAxis: { title: 'Land Cover' },
+        title: 'Built-up Area Distribution 2003',
+        legend: { position: 'none' },
+        orientation: 'horizontal',
+        fontName: 'arial',
+        fontSize: 10,
+        chartArea: { backgroundColor: 'EBEBEB' }
+    });
+
+var builtup_chart_2013 = ui.Chart.array.values(builtup_2013, 0, builtup_names)
+    .setChartType('ColumnChart')
+    .setOptions({
+        hAxis: { title: 'Area (Km²)' },
+        vAxis: { title: 'Land Cover' },
+        title: 'Built-up Area Distribution 2013',
+        legend: { position: 'none' },
+        orientation: 'horizontal',
+        fontName: 'arial',
+        fontSize: 10,
+        chartArea: { backgroundColor: 'EBEBEB' }
+    });
+
+var builtup_chart_2023 = ui.Chart.array.values(builtup_2023, 0, builtup_names)
+    .setChartType('ColumnChart')
+    .setOptions({
+        hAxis: { title: 'Area (Km²)' },
+        vAxis: { title: 'Land Cover' },
+        title: 'Built-up Area Distribution 2023',
+        legend: { position: 'none' },
+        orientation: 'horizontal',
+        fontName: 'arial',
+        fontSize: 10,
+        chartArea: { backgroundColor: 'EBEBEB' }
+    });
+
+ 
+////Selection dial
+//----------------------------------------------------------------------------------------------------------------------------------
+var lulc_selection = ui.Select({
+  items: Object.keys(lulc),
+  onChange: function(key){
+    if(key === 'LULC 1993'){
+      main_map.clear();
+      panel.remove(chart_2003);  // To remove chart if existing
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(lulc['LULC 1993'].clip(AOI), lulcVisParam, 'LULC 1993');
+      main_map.add(lulc_legend_panel);
+      panel.add(chart_1993);
+    }
+    
+    if(key === 'LULC 2003'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(lulc['LULC 2003'].clip(AOI), lulcVisParam, 'LULC 2003');
+      main_map.add(lulc_legend_panel);
+
+      panel.add(chart_2003);
+    }
+    
+    if(key === 'LULC 2013'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2003);
+      panel.remove(chart_2023);
+      main_map.addLayer(lulc['LULC 2013'].clip(AOI), lulcVisParam, 'LULC 2013');
+      main_map.add(lulc_legend_panel);
+
+      panel.add(chart_2013);
+    }
+    
+    if(key === 'LULC 2023'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2003);
+      panel.remove(chart_2013)
+      main_map.addLayer(lulc['LULC 2023'].clip(AOI), lulcVisParam, 'LULC 2023');
+      main_map.add(lulc_legend_panel);
+
+      panel.add(chart_2023);
+    }
+  }
+  
+});
+
+
+var Builtup_selection = ui.Select({
+  items: Object.keys(Builtup),
+  onChange: function(key){
+    if(key === 'Builtup 1993'){
+      main_map.clear();
+      panel.remove(chart_2003);  // To remove chart if existing
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(builtup['Builtup 1993'].clip(AOI), builtupVisParam, 'Builtup 1993');
+      main_map.add(builtup_legend_panel);
+      panel.add(chart_1993);
+    }
+    
+    if(key === 'Builtup 2003'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(builtup['Builtup 2003'].clip(AOI), builtupVisParam, 'Builtup 2003');
+      main_map.add(builtup_legend_panel);
+
+      panel.add(chart_2003);
+    }
+    
+    if(key === 'Builtup 2013'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2003);
+      panel.remove(chart_2023);
+      main_map.addLayer(builtup['Builtup 2013'].clip(AOI), builtupVisParam, 'Builtup 2013');
+      main_map.add(builtup_legend_panel);
+
+      panel.add(chart_2013);
+    }
+    
+    if(key === 'Builtup 2023'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2003);
+      panel.remove(chart_2013)
+      main_map.addLayer(builtup['Builtup 2023'].clip(AOI), builtupVisParam, 'Builtup 2023');
+      main_map.add(builtup_legend_panel);
+
+      panel.add(chart_2023);
+    }
+  }
+  
+});
+
+
+var Night_lights_selection = ui.Select({
+  items: Object.keys(Night_Lights),
+  onChange: function(key){
+    if(key === 'Night Lights 1993'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(Night_Lights['Night Lights 1993'].clip(AOI), ntlVisParam, 'Night Lights 1993');
+      //main_map.add(legend_panel);
+    }
+    
+    if(key === 'Night Lights 2003'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(Night_Lights['Night Lights 2002'].clip(AOI),ntlVisParam, 'Night Lights 2003');
+      //main_map.add(legend_panel);
+    }
+    
+   if(key === 'Night Lights 2013'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(Night_Lights['Night Lights 2013'].clip(AOI), ntlVisParam, 'Night Lights 2013');
+      //main_map.add(legend_panel);
+    }
+    
+    if(key === 'Night Lights 2023'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2003);
+      main_map.addLayer(Night_Lights['Night Lights 2023'].clip(AOI), ntlVisParam, 'Night Lights 2023');
+      //main_map.add(legend_panel);
+    }
+  }
+});
+Night_lights_selection.setPlaceholder('Select the Night lights image');
+Night_lights_selection.style().set({
+  color: 'black',
+  padding: '0 20px 0 20px',
+  'backgroundColor':'#181823'
+});
+var GHSL_pop_selection = ui.Select({
+  items: Object.keys(GHSL_pop),
+  onChange: function(key){
+    if(key === 'GHSL Population 1990'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(GHSL_pop['GHSL Population 1990'].clip(AOI), popVisParam, 'GHSL Population 1990');
+      main_map.add(ghsl_legend_panel);
+    }
+    
+     if(key === 'GHSL Population 2000'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(GHSL_pop['GHSL Population 2000'].clip(AOI),popVisParam, 'GHSL Population 2000');
+      main_map.add(ghsl_legend_panel);
+    }
+    
+    if(key === 'GHSL Population 2010'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(GHSL_pop['GHSL Population 2010'].clip(AOI),popVisParam, 'GHSL Population 2010');
+      main_map.add(ghsl_legend_panel);
+    }
+     if(key === 'GHSL Population 2020'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(GHSL_pop['GHSL Population 2020'].clip(AOI),popVisParam, 'GHSL Population 2020');
+      main_map.add(ghsl_legend_panel);
+    }
+  }
+});
+
+var NDVI_selection = ui.Select({
+  items: Object.keys(NDVI),
+  onChange: function(key){
+    if(key === 'NDVI 1993'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(NDVI['NDVI 1993'].clip(AOI),ndviVisParam, 'NDVI 1993');
+      
+    }
+    
+   if(key === 'NDVI 2003'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2023);
+      main_map.addLayer(NDVI['NDVI 2003'].clip(AOI),ndviVisParam, 'NDVI 2003');
+      
+    }
+    
+    if(key === 'NDVI 2013'){
+      main_map.clear();
+      panel.remove(chart_2003);
+      panel.remove(chart_1993);
+      panel.remove(chart_2023);
+      main_map.addLayer(NDVI['NDVI 2013'].clip(AOI),ndviVisParam, 'NDVI 2013');
+      
+    }
+    
+    if(key === 'NDVI 2023'){
+      main_map.clear();
+      panel.remove(chart_1993);
+      panel.remove(chart_2013);
+      panel.remove(chart_2003);
+      main_map.addLayer(NDVI['NDVI 2023'].clip(AOI),ndviVisParam, 'NDVI 2023');
+    }
+  }
+  
+});
+NDVI_selection.setPlaceholder('Select the NDVI image');
+NDVI_selection.style().set({
+  color: 'black',
+  padding: '0 20px 0 20px',
+  'backgroundColor':'#181823'
+});
+
+
+GHSL_pop_selection.setPlaceholder('Select the GHSL Population image');
+GHSL_pop_selection.style().set({
+  color: 'black',
+  padding: '0 20px 0 20px',
+  'backgroundColor':'#181823'
+});
+
+var options = {
+  'LULC': 'lulc_selection',
+  'Builtup Change': 'Builtup_selection',
+  'Night Lights': 'Night lights',
+  'NDVI change':'NDVI change',
+  'GHSL Population change': 'GHSL Population Change',
+};
+
+//Main widget map selection
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+var options_selection = ui.Select({
+  items: Object.keys(options), 
+  onChange: function(key){
+    if(key === 'LULC'){
+      main_map.clear();
+      panel.remove(chart_1993)
+      panel.remove(chart_2003)
+      panel.remove(chart_2013)
+      panel.remove(chart_2023)
+      panel.remove(builtup_chart_1993)
+      panel.remove(builtup_chart_2003)
+      panel.remove(builtup_chart_2023)
+      panel.remove(builtup_chart_2013)
+      panel.remove(builtup_label);
+      panel.remove(NTL_label);
+      panel.remove(Night_lights_selection);
+      panel.remove(lulc_legend_panel);
+      // panel.remove(builtup_legend_panel);
+      panel.add(lulc_label);
+      panel.remove(NDVI_label);
+      panel.remove(NDVI_selection);
+      panel.remove(GHSL_pop_selection);
+      panel.remove(GHSL_pop_selection);
+      // panel.remove(ghsl_legend_panel);
+      panel.remove(Builtup_selection);
+      ui.root.widgets().reset([panel, main_map]);
+      panel.add(lulc_selection);
+    }
+    else if(key === 'Builtup Change'){
+      main_map.clear();
+      panel.remove(chart_1993)
+      panel.remove(chart_2003)
+      panel.remove(chart_2013)
+      panel.remove(chart_2023)
+      panel.add(builtup_chart_1993)
+      panel.add(builtup_chart_2003)
+      panel.add(builtup_chart_2023)
+      panel.add(builtup_chart_2013)
+      panel.add(builtup_label);
+      panel.add(builtup_legend_panel);
+      panel.remove(NTL_label);
+      panel.remove(Night_lights_selection);
+      panel.remove(lulc_legend_panel);
+      panel.remove(lulc_label);
+      panel.remove(NDVI_label);
+      panel.remove(NDVI_selection);
+      panel.remove(GHSL_pop_selection);
+      panel.remove(GHSL_pop_selection);
+      panel.remove(ghsl_legend_panel);
+      panel.add(Builtup_selection);
+      ui.root.widgets().reset([panel, main_map]);
+      panel.remove(lulc_selection);
+    }
+    else if (key === 'Night Lights'){
+      main_map.clear();
+      panel.remove(chart_1993)
+      panel.remove(chart_2003)
+      panel.remove(chart_2013)
+      panel.remove(chart_2023)
+      panel.remove(builtup_chart_1993)
+      panel.remove(builtup_chart_2003)
+      panel.remove(builtup_chart_2023)
+      panel.remove(builtup_chart_2013)
+      panel.remove(builtup_label);
+      panel.remove(NTL_label);
+      panel.add(Night_lights_selection);
+      panel.remove(lulc_legend_panel);
+      panel.remove(lulc_label);
+      panel.remove(NDVI_label);
+      panel.remove(NDVI_selection);
+      panel.remove(builtup_legend_panel);
+      panel.remove(GHSL_pop_selection);
+      panel.remove(GHSL_pop_selection);
+      panel.remove(ghsl_legend_panel);
+      panel.remove(Builtup_selection);
+      ui.root.widgets().reset([panel, main_map]);
+      panel.remove(lulc_selection);
+    }
+  
+    else if (key === 'NDVI change'){
+      main_map.clear();
+      panel.remove(chart_1993)
+      panel.remove(chart_2003)
+      panel.remove(chart_2013)
+      panel.remove(chart_2023)
+      panel.remove(builtup_chart_1993)
+      panel.remove(builtup_chart_2003)
+      panel.remove(builtup_chart_2023)
+      panel.remove(builtup_chart_2013)
+      panel.remove(builtup_label);
+      // panel.remove(builtup_legend_panel);
+      panel.remove(lulc_label);
+      panel.remove(lulc_legend_panel);
+      panel.add(NDVI_label);
+      panel.add(NDVI_selection);
+      panel.remove(lulc_selection);
+      panel.remove(GHSL_pop_label);
+      panel.remove(GHSL_pop_selection);
+      // panel.remove(ghsl_legend_panel);
+      panel.remove(NTL_label);
+      panel.remove(Night_lights_selection);
+      panel.remove(Builtup_selection);
+      ui.root.widgets().reset([panel, main_map]);
+     // panel.remove(lulc_change_selection);
+    }
+    
+    else if (key === 'GHSL Population change'){
+      main_map.clear();
+      panel.remove(chart_1993)
+      panel.remove(chart_2003)
+      panel.remove(chart_2013)
+      panel.remove(chart_2023)
+      panel.remove(builtup_chart_1993)
+      panel.remove(builtup_chart_2003)
+      panel.remove(builtup_chart_2023)
+      panel.remove(builtup_chart_2013)
+      panel.remove(builtup_label);
+      panel.remove(NTL_label);
+      panel.remove(Night_lights_selection);
+      panel.remove(lulc_selection);
+      panel.remove(lulc_legend_panel);
+      panel.remove(lulc_label);
+      panel.remove(NDVI_label);
+      panel.remove(NDVI_selection);
+      panel.remove(GHSL_pop_label);
+      panel.add(GHSL_pop_selection);
+      panel.add(ghsl_legend_panel);
+      panel.remove(builtup_legend_panel);
+      panel.remove(Builtup_selection);
+      ui.root.widgets().reset([panel, main_map]);
+      panel.remove(lulc_selection);
+    }
+  }
+});
+options_selection.setPlaceholder('Choose a map');
+options_selection.style().set({
+  color: 'black',
+  padding: '0 20px 0 20px',
+  'backgroundColor':'#181823'
+});
+
+panel.add(options_selection);
