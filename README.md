@@ -1,6 +1,5 @@
-# Urban-Sprawl-Analysis-BBSR
-## Bhubaneswar Urbanization and Climate Analysis
 
+## Urban Growth Analysis of Bhubaneshwar
 ### Overview
 This repository contains data, code, and analysis pertaining to the urbanization and climate study of Bhubaneswar, Odisha. The focus is on understanding the impacts of rapid urbanization on land use, land cover (LULC), and microclimate, particularly Urban Heat Islands (UHI).
 
