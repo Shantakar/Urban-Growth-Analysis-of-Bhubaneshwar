@@ -44,14 +44,14 @@ This repository contains data, code, and analysis pertaining to the urbanization
 This repository provides comprehensive insights into the urbanization dynamics of Bhubaneswar and its impact on the local climate. The analysis underscores the importance of sustainable urban planning to mitigate adverse effects and ensure the city's long-term resilience and livability.
 
 Below are the GEE Code links for LULC classification for better convenience 
-##1993
+###1993
 https://code.earthengine.google.com/a6949f31849ec500a28645a857192b6f
-##2003
+###2003
 https://code.earthengine.google.com/db25a6f058973448fdd4434821482c25
-##2013
+###2013
 https://code.earthengine.google.com/66cde522f2bc9aef3627dad14c135524
 ##2023
 https://code.earthengine.google.com/b0032b19742442feb092faea502f36bd
-##Change Detection
+###Change Detection
 https://code.earthengine.google.com/fa556154c3e3cb546e7a3309cfd0d53e
 
